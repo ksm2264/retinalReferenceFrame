@@ -16,8 +16,11 @@ maxEcc = 45
 FL = 2100/2.3232
 
 # path to world cam mp4
-vidPath = '/media/karl/Seagate2/JACworld.mp4'
+vidPath = '/home/karl/retinalReferenceFrame/JACworld.mp4'
 
 # path to gazeCSV (worldFrame, gazeX, gazeY columns)
 gazePath = '/home/karl/year3/gazePrediction/JAC_por.mat'
+
+# output path for ret mp4
+outPath = '/home/karl/retinalReferenceFrame/JAC_ret.mp4'
  
