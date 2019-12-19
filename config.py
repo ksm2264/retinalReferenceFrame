@@ -21,6 +21,6 @@ vidPath = '/home/karl/retinalReferenceFrame/JACworld.mp4'
 # path to gazeCSV (worldFrame, gazeX, gazeY columns)
 gazePath = '/home/karl/year3/gazePrediction/JAC_por.mat'
 
-# output path for ret mp4
-outPath = '/home/karl/retinalReferenceFrame/JAC_ret.mp4'
+# output path for ret pngs
+outPath = '/home/karl/retinalReferenceFrame/JAC_ret/'
  
