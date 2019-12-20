@@ -17,7 +17,13 @@ import ray
 
 import multiprocessing
 
-def processData(idx,gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPath):
+
+# start ray
+ray.init()
+
+
+@ray.remote
+def processData(idx,gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPath,vidPath):
     
     print('Frame '+str(idx)+' of '+str(len(gx)))
     
@@ -35,6 +41,9 @@ def processData(idx,gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPat
     d = FL/rotatedEyeVecs[:,2]
     xCoords = (np.round(np.multiply(d,rotatedEyeVecs[:,0])).astype(int)+(1920/2)).astype(int)
     yCoords = (np.round(np.multiply(d,rotatedEyeVecs[:,1])).astype(int)+(1080/2)).astype(int)
+    
+    # create videoreader obj and writer
+    cap = cv2.VideoCapture(vidPath)
     
     # go to correct frame and read frame   
     cap.set(1,idx)
@@ -102,16 +111,13 @@ straightGazeVec = [0,0,1]
 blankFrame = np.zeros((videoRes,videoRes,3)).astype(int)
 oneColor = np.zeros((videoRes,videoRes))
 
-# create videoreader obj and writer
-cap = cv2.VideoCapture(vidPath)
+
 
 #fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 
 #vid = cv2.VideoWriter(outPath,fourcc,30,(videoRes,videoRes))
 
-p = Pool(multiprocessing.cpu_count())
-p.
-
-processData(gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPath)
+for idx in range(len(gx)):
+    processData.remote(idx,gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPath,vidPath)
 
 #vid.release()
