@@ -6,24 +6,17 @@ Created on Thu Dec 19 09:31:06 2019
 @author: karl
 """
 
+
 import numpy as np
-import math
 import scipy.io as sio
-import normalize_easy as normez
 from utils_misc import rotation_matrix_from_vectors
 import cv2
-import matplotlib.pyplot as plt
-import ray
-
-import multiprocessing
+#import matplotlib.pyplot as plt
+from multiprocessing import cpu_count
 
 
-# start ray
-ray.init()
 
-
-@ray.remote
-def processData(idx,gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPath,vidPath):
+def processData(idx,gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPath,vidPath,vid):
     
     print('Frame '+str(idx)+' of '+str(len(gx)))
     
@@ -45,10 +38,13 @@ def processData(idx,gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPat
     # create videoreader obj and writer
     cap = cv2.VideoCapture(vidPath)
     
-    # go to correct frame and read frame   
+   # # go to correct frame and read frame   
     cap.set(1,idx)
     _,frame = cap.read()
-            
+         
+    # read frame
+   # frame = cv2.imread(vidPath+str(idx+1)+'.png')
+    
     # init blank frame
     thisRetFrame = blankFrame.copy()
     
@@ -67,8 +63,8 @@ def processData(idx,gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPat
         inColor[silenceThese] = 0
         thisRetFrame[:,:,color] = inColor
     
-        thisRetFrame = np.uint8(thisRetFrame)
-        cv2.imwrite(outPath+str(idx)+'.png',thisRetFrame)
+    thisRetFrame = np.uint8(thisRetFrame)
+    vid.write(thisRetFrame)
 
 
 # read in params
@@ -113,11 +109,11 @@ oneColor = np.zeros((videoRes,videoRes))
 
 
 
-#fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 
-#vid = cv2.VideoWriter(outPath,fourcc,30,(videoRes,videoRes))
+vid = cv2.VideoWriter(outPath,fourcc,30,(videoRes,videoRes))
 
 for idx in range(len(gx)):
-    processData.remote(idx,gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPath,vidPath)
+    processData(idx,gx,gy,FL,straightGazeVec,baseVecs,blankFrame,videoRes,outPath,vidPath,vid)
 
-#vid.release()
+vid.release()

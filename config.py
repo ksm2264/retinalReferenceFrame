@@ -15,12 +15,12 @@ maxEcc = 45
 # focal length of camera in pixels
 FL = 2100/2.3232
 
-# path to world cam mp4
+# path to world cam frames
 vidPath = '/home/karl/retinalReferenceFrame/JACworld.mp4'
 
 # path to gazeCSV (worldFrame, gazeX, gazeY columns)
 gazePath = '/home/karl/year3/gazePrediction/JAC_por.mat'
 
 # output path for ret pngs
-outPath = '/home/karl/retinalReferenceFrame/JAC_ret/'
+outPath = '/home/karl/retinalReferenceFrame/JAC_ret.mp4'
  
